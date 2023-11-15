@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Video & Audio Recorder</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <style>
+      body {
+         text-align: center;
+         color: red;
+         font-size: 1.2em;
+      }
+      #aud_st, #aud_en{
+         margin-top: 10px;
+         padding: 10px;
+         border-radius: 4px;
+         cursor: pointer;
+      }
+
+      audio {
+         display: block;
+         margin: 6px auto;
+      }
+      a {
+         color: green;
+      }
+   </style>
+</head>
+<body>
+  <h1 style="color:blue">Voice note recorder</h1>
+
+   <!-- ------------ -->
+   <br>
+   <hr>
+   <!-- ------------ -->
+   <div class="display-none" id="audio_rec">
+      <h3> Record Audio</h3>
+      <button type="button" id="aud_st"
+      onclick="start_audio_Recording()"><i class="fa fa-play"></i>
+      </button>
+      <button type="button" id="aud_en"
+      disabled onclick="stop_Recording(this, document.getElementById('aud_st'))"> <i class="fa fa-stop"></i></button>
+   </div>
+<script>
+//--------------------audio---------------------------------------
+
+function start_audio_Recording() {
+   //To stores the recorded media
+   let chunksArr = [];
+   const startBtn=document.getElementById("aud_st");
+   const endBtn=document.getElementById("aud_en");
+   
+   // Access the camera and microphone
+   navigator.mediaDevices.getUserMedia({audio: true})
+   .then((mediaStream) => {
+      const medRec = new MediaRecorder(mediaStream);
+      window.mediaStream = mediaStream;
+      window.mediaRecorder = medRec;
+      medRec.start();
+      
+   //when recorded data is available then push into chunkArr array
+   medRec.ondataavailable = (e) => {
+      chunksArr.push(e.data);
+   };
+   
+   //stop the audio recording
+      medRec.onstop = () => {
+         const blob = new Blob(chunksArr, {type: "audio/mpeg"});
+         chunksArr = [];
+         
+         // create audio element and store the media which is recorded
+         const recMediaFile = document.createElement("audio");
+         recMediaFile.controls = true;
+         const RecUrl = URL.createObjectURL(blob);
+         recMediaFile.src = RecUrl;
+         document.getElementById("audio_rec").append(
+         recMediaFile);
+      };
+      startBtn.disabled = true;
+      endBtn.disabled = false;
+   });
+}
+function stop_Recording(end, start) {
+   //stop all tracks
+   window.mediaRecorder.stop();
+   window.mediaStream.getTracks() .forEach((track) => {track.stop();});
+      //disable the stop button and enable the start button
+      end.disabled = true;
+      start.disabled = false;
+   }
+</script>
+</body>
+</html>

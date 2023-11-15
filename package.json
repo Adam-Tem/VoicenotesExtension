@@ -1,0 +1,79 @@
+{
+  "name": "voicenotes",
+  "displayName": "voicenotes",
+  "description": "record voice notes instead of filling out files with unnecessarily long comments!",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "permissions": [
+    "webview",
+    "audio-capture"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "voicenotes-sidebar-view",
+          "title": "Voice Notes",
+          "icon": "media/mic.svg"
+        }
+      ]
+    },
+    "views": {
+      "voicenotes-sidebar-view": [
+        {
+          "type": "webview",
+          "id": "voicenotes-sidebar",
+          "name": "Voice Notes",
+          "icon": "media/mic.svg",
+          "contextualTitle": "Voice Notes"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "voicenotes.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+
+  "webview": {
+    "contentSecurityPolicy": {
+      "webview-src": ["'self'"],
+      "extension-view-src": ["'self'"],
+      "script-src": ["'self'"],
+      "style-src": ["'self'"],
+      "img-src": ["'self'"],
+      "font-src": ["'self'"],
+      "media-src": ["'self'"]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.3",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-electron": "^2.3.6",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2"
+  }
+
+}
